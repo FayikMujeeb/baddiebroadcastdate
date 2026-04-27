@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>coffee?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Manrope:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper: #f5efe6;
+    --paper-warm: #efe6d8;
+    --ink: #2e2620;
+    --ink-soft: #6b5c52;
+    --ink-faint: #a89889;
+    --rule: rgba(46, 38, 32, 0.12);
+    --shadow: 0 30px 60px -30px rgba(46, 38, 32, 0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { min-height: 100%; }
+
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* warm paper grain */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(232, 168, 130, 0.08), transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(180, 158, 196, 0.08), transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.18 0 0 0 0 0.15 0 0 0 0 0.12 0 0 0 0.045 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    opacity: 0.6;
+    z-index: 1;
+  }
+
+  main {
+    position: relative;
+    z-index: 2;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: clamp(3rem, 10vh, 6rem) 1.5rem 4rem;
+    text-align: center;
+    animation: rise 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .eyebrow {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+  }
+
+  .eyebrow::before,
+  .eyebrow::after {
+    content: '';
+    height: 1px;
+    width: 28px;
+    background: var(--ink-faint);
+    opacity: 0.6;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(2.6rem, 7vw, 4.25rem);
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+  }
+
+  h1 em {
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  .lede {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--ink-soft);
+    font-size: 1.15rem;
+    max-width: 28ch;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  .pick {
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    color: var(--ink-faint);
+    margin: clamp(3rem, 7vh, 4.5rem) 0 2rem;
+  }
+
+  .dates {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    max-width: 580px;
+    margin: 0 auto;
+  }
+
+  .date-card {
+    position: relative;
+    background: var(--paper-warm);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 2.25rem 1.5rem 2rem;
+    text-decoration: none;
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+                box-shadow 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+                background 0.5s ease;
+  }
+
+  /* dashed corner ticks for stamp/ticket feel */
+  .date-card::before,
+  .date-card::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--ink-faint);
+    opacity: 0.4;
+  }
+
+  .date-card::before {
+    top: 10px;
+    left: 10px;
+    border-right: none;
+    border-bottom: none;
+  }
+
+  .date-card::after {
+    bottom: 10px;
+    right: 10px;
+    border-left: none;
+    border-top: none;
+  }
+
+  .date-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow);
+    background: #f8f1e4;
+  }
+
+  .flower-wrap {
+    width: 140px;
+    height: 140px;
+    margin-bottom: 1.5rem;
+    transition: transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .date-card:hover .flower-wrap {
+    transform: rotate(8deg);
+  }
+
+  .flower-wrap svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  /* gentle sway for the flowers */
+  @keyframes sway {
+    0%, 100% { transform: rotate(-2deg); }
+    50% { transform: rotate(2deg); }
+  }
+
+  .flower-wrap svg > g {
+    transform-origin: 60px 90px;
+    animation: sway 6s ease-in-out infinite;
+  }
+
+  .date-card:nth-child(2) .flower-wrap svg > g {
+    animation-duration: 7.5s;
+    animation-delay: -2s;
+  }
+
+  .day {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.35rem;
+  }
+
+  .num {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 3.25rem;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+  }
+
+  .month {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    color: var(--ink-faint);
+  }
+
+  .divider {
+    width: 32px;
+    height: 1px;
+    background: var(--rule);
+    margin: 0.9rem auto;
+  }
+
+  .add {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    transition: color 0.3s ease;
+  }
+
+  .date-card:hover .add {
+    color: var(--ink);
+  }
+
+  .add svg {
+    display: inline-block;
+    vertical-align: -2px;
+    margin-left: 4px;
+    transition: transform 0.4s ease;
+  }
+
+  .date-card:hover .add svg {
+    transform: translateX(4px);
+  }
+
+  /* unavailable section */
+  .away-label {
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    color: var(--ink-faint);
+    margin: 4rem 0 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+  }
+
+  .away-label::before,
+  .away-label::after {
+    content: '';
+    height: 1px;
+    width: 28px;
+    background: var(--ink-faint);
+    opacity: 0.5;
+  }
+
+  .away-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    max-width: 580px;
+    margin: 0 auto;
+  }
+
+  .away-card {
+    position: relative;
+    background: transparent;
+    border: 1px dashed var(--rule);
+    border-radius: 4px;
+    padding: 1.25rem 0.5rem 1rem;
+    text-align: center;
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
+
+  .bud-wrap {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 0.6rem;
+    filter: grayscale(0.4);
+  }
+
+  .bud-wrap svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .away-day {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    margin-bottom: 0.2rem;
+  }
+
+  .away-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--ink-soft);
+    margin-bottom: 0.2rem;
+  }
+
+  .away-month {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    color: var(--ink-faint);
+  }
+
+  .goa-note {
+    margin-top: 1.25rem;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--ink-faint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .goa-note svg {
+    opacity: 0.7;
+  }
+
+  footer {
+    margin-top: 3.5rem;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+    line-height: 1.9;
+  }
+
+  footer a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--ink-faint);
+    padding-bottom: 1px;
+    transition: border-color 0.3s ease;
+  }
+
+  footer a:hover {
+    border-bottom-color: var(--ink);
+  }
+
+  .hour {
+    font-variant-numeric: oldstyle-nums;
+  }
+
+  /* tiny botanical flourish in the footer */
+  .sprig {
+    display: block;
+    width: 60px;
+    margin: 1.75rem auto 0;
+    opacity: 0.5;
+  }
+
+  @media (max-width: 480px) {
+    .dates { grid-template-columns: 1fr; max-width: 320px; }
+    .num { font-size: 2.75rem; }
+    .away-grid { grid-template-columns: repeat(2, 1fr); max-width: 280px; }
+  }
+
+  /* petal explosion transition */
+  .petal-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+  }
+
+  .wash {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    animation: wash-grow 1100ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    filter: blur(2px);
+  }
+
+  @keyframes wash-grow {
+    0% {
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+    }
+    25% { opacity: 0.55; }
+    100% {
+      transform: translate(-50%, -50%) scale(80);
+      opacity: 1;
+    }
+  }
+
+  .petal {
+    position: absolute;
+    width: 22px;
+    height: 32px;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0.2) rotate(var(--start-r));
+    opacity: 0;
+    animation: petal-fly 1100ms cubic-bezier(0.2, 0.65, 0.3, 1) forwards;
+    box-shadow: 0 2px 6px rgba(46, 38, 32, 0.08);
+  }
+
+  @keyframes petal-fly {
+    0% {
+      transform: translate(-50%, -50%) scale(0.2) rotate(var(--start-r));
+      opacity: 0;
+    }
+    12% { opacity: 1; }
+    100% {
+      transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1.6) rotate(var(--end-r));
+      opacity: 0.95;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .petal, .wash { animation: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">an invitation</p>
+  <h1>coffee, with <em>you</em>?</h1>
+  <p class="lede">pick a petal — it'll quietly slip itself onto your calendar.</p>
+
+  <p class="pick">— choose a day —</p>
+
+  <div class="dates">
+    <!-- Tuesday, April 28 — peach peony -->
+    <a class="date-card" data-petal="peach"
+       href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Coffee%20at%20Concu%20%E2%98%95&dates=20260428T133000Z%2F20260428T143000Z&details=See%20you%20at%207pm%20%E2%9C%A8%0AConcu%2C%20Indiranagar%0Ahttps%3A%2F%2Fmaps.app.goo.gl%2FSYLxBsgiC84i861c6&location=Concu%2C%20Indiranagar%2C%20Bengaluru"
+       target="_blank" rel="noopener">
+      <div class="flower-wrap" aria-hidden="true">
+        <svg viewBox="0 0 120 120">
+          <g>
+            <!-- stem -->
+            <path d="M60 60 Q 58 80 60 110" stroke="#7a8b5c" stroke-width="1.6" fill="none" stroke-linecap="round" />
+            <!-- leaf -->
+            <path d="M60 82 Q 50 78 44 84 Q 50 90 60 86 Z" fill="#8fa66e" opacity="0.9" />
+            <path d="M60 86 L 47 84" stroke="#6b8050" stroke-width="0.6" fill="none" />
+
+            <!-- outer petals -->
+            <g opacity="0.92">
+              <ellipse cx="60" cy="40" rx="13" ry="22" fill="#e8a890" />
+              <ellipse cx="60" cy="40" rx="13" ry="22" fill="#e8a890" transform="rotate(72 60 50)" />
+              <ellipse cx="60" cy="40" rx="13" ry="22" fill="#e8a890" transform="rotate(144 60 50)" />
+              <ellipse cx="60" cy="40" rx="13" ry="22" fill="#e8a890" transform="rotate(216 60 50)" />
+              <ellipse cx="60" cy="40" rx="13" ry="22" fill="#e8a890" transform="rotate(288 60 50)" />
+            </g>
+
+            <!-- mid petals (lighter, offset) -->
+            <g opacity="0.96" transform="rotate(36 60 50)">
+              <ellipse cx="60" cy="44" rx="9" ry="15" fill="#f0bca8" />
+              <ellipse cx="60" cy="44" rx="9" ry="15" fill="#f0bca8" transform="rotate(72 60 50)" />
+              <ellipse cx="60" cy="44" rx="9" ry="15" fill="#f0bca8" transform="rotate(144 60 50)" />
+              <ellipse cx="60" cy="44" rx="9" ry="15" fill="#f0bca8" transform="rotate(216 60 50)" />
+              <ellipse cx="60" cy="44" rx="9" ry="15" fill="#f0bca8" transform="rotate(288 60 50)" />
+            </g>
+
+            <!-- inner cluster -->
+            <g>
+              <circle cx="60" cy="50" r="9" fill="#d99078" />
+              <circle cx="57" cy="48" r="2" fill="#c4796b" />
+              <circle cx="62" cy="49" r="2" fill="#c4796b" />
+              <circle cx="60" cy="52" r="2" fill="#c4796b" />
+              <!-- stamen dots -->
+              <circle cx="60" cy="46" r="0.9" fill="#f4d168" />
+              <circle cx="64" cy="51" r="0.9" fill="#f4d168" />
+              <circle cx="56" cy="51" r="0.9" fill="#f4d168" />
+              <circle cx="60" cy="54" r="0.9" fill="#f4d168" />
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div class="day">Tuesday</div>
+      <div class="num">28</div>
+      <div class="month">April</div>
+      <div class="divider"></div>
+      <div class="add">add to calendar
+        <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+          <path d="M1 5h10M7 1l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </a>
+
+    <!-- Wednesday, April 29 — lavender cosmos -->
+    <a class="date-card" data-petal="lavender"
+       href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Coffee%20at%20Concu%20%E2%98%95&dates=20260429T133000Z%2F20260429T143000Z&details=See%20you%20at%207pm%20%E2%9C%A8%0AConcu%2C%20Indiranagar%0Ahttps%3A%2F%2Fmaps.app.goo.gl%2FSYLxBsgiC84i861c6&location=Concu%2C%20Indiranagar%2C%20Bengaluru"
+       target="_blank" rel="noopener">
+      <div class="flower-wrap" aria-hidden="true">
+        <svg viewBox="0 0 120 120">
+          <g>
+            <!-- stem -->
+            <path d="M60 60 Q 62 82 60 110" stroke="#7a8b5c" stroke-width="1.6" fill="none" stroke-linecap="round" />
+            <!-- leaves -->
+            <path d="M60 75 Q 70 72 76 78 Q 70 82 60 79 Z" fill="#8fa66e" opacity="0.9" />
+            <path d="M60 92 Q 52 90 47 95 Q 53 99 60 96 Z" fill="#8fa66e" opacity="0.85" />
+
+            <!-- 8 petals, cosmos style -->
+            <g>
+              <ellipse cx="60" cy="32" rx="9" ry="20" fill="#bea8d1" opacity="0.85" />
+              <ellipse cx="60" cy="32" rx="9" ry="20" fill="#bea8d1" opacity="0.85" transform="rotate(45 60 50)" />
+              <ellipse cx="60" cy="32" rx="9" ry="20" fill="#bea8d1" opacity="0.85" transform="rotate(90 60 50)" />
+              <ellipse cx="60" cy="32" rx="9" ry="20" fill="#bea8d1" opacity="0.85" transform="rotate(135 60 50)" />
+              <ellipse cx="60" cy="32" rx="9" ry="20" fill="#bea8d1" opacity="0.85" transform="rotate(180 60 50)" />
+              <ellipse cx="60" cy="32" rx="9" ry="20" fill="#bea8d1" opacity="0.85" transform="rotate(225 60 50)" />
+              <ellipse cx="60" cy="32" rx="9" ry="20" fill="#bea8d1" opacity="0.85" transform="rotate(270 60 50)" />
+              <ellipse cx="60" cy="32" rx="9" ry="20" fill="#bea8d1" opacity="0.85" transform="rotate(315 60 50)" />
+            </g>
+
+            <!-- petal vein highlights -->
+            <g stroke="#a48cb8" stroke-width="0.5" fill="none" opacity="0.5">
+              <path d="M60 22 L 60 42" />
+              <path d="M60 22 L 60 42" transform="rotate(45 60 50)" />
+              <path d="M60 22 L 60 42" transform="rotate(90 60 50)" />
+              <path d="M60 22 L 60 42" transform="rotate(135 60 50)" />
+              <path d="M60 22 L 60 42" transform="rotate(180 60 50)" />
+              <path d="M60 22 L 60 42" transform="rotate(225 60 50)" />
+              <path d="M60 22 L 60 42" transform="rotate(270 60 50)" />
+              <path d="M60 22 L 60 42" transform="rotate(315 60 50)" />
+            </g>
+
+            <!-- center -->
+            <circle cx="60" cy="50" r="8" fill="#e8c452" />
+            <circle cx="60" cy="50" r="8" fill="url(#dot-pattern)" />
+            <circle cx="58" cy="48" r="1.2" fill="#a8852e" />
+            <circle cx="62" cy="49" r="1.2" fill="#a8852e" />
+            <circle cx="60" cy="52" r="1.2" fill="#a8852e" />
+            <circle cx="63" cy="52" r="1" fill="#a8852e" />
+            <circle cx="57" cy="51" r="1" fill="#a8852e" />
+          </g>
+        </svg>
+      </div>
+      <div class="day">Wednesday</div>
+      <div class="num">29</div>
+      <div class="month">April</div>
+      <div class="divider"></div>
+      <div class="add">add to calendar
+        <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+          <path d="M1 5h10M7 1l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </a>
+  </div>
+
+  <p class="away-label">— away these days —</p>
+
+  <div class="away-grid">
+    <!-- April 30 -->
+    <div class="away-card" aria-label="April 30, unavailable, in Goa">
+      <div class="bud-wrap" aria-hidden="true">
+        <svg viewBox="0 0 60 60">
+          <path d="M30 32 Q 28 44 30 56" stroke="#a89889" stroke-width="1.2" fill="none" stroke-linecap="round" />
+          <path d="M30 42 Q 24 40 21 44 Q 25 47 30 45 Z" fill="#b5b59a" opacity="0.7" />
+          <ellipse cx="30" cy="26" rx="6" ry="9" fill="#c9b8b0" opacity="0.85" />
+          <ellipse cx="30" cy="26" rx="3" ry="6" fill="#b89e94" opacity="0.7" />
+          <path d="M30 17 Q 32 22 30 27" stroke="#9d847a" stroke-width="0.5" fill="none" />
+        </svg>
+      </div>
+      <div class="away-day">Thursday</div>
+      <div class="away-num">30</div>
+      <div class="away-month">April</div>
+    </div>
+
+    <!-- May 1 -->
+    <div class="away-card" aria-label="May 1, unavailable, in Goa">
+      <div class="bud-wrap" aria-hidden="true">
+        <svg viewBox="0 0 60 60">
+          <path d="M30 32 Q 32 44 30 56" stroke="#a89889" stroke-width="1.2" fill="none" stroke-linecap="round" />
+          <path d="M30 44 Q 36 42 39 46 Q 35 49 30 47 Z" fill="#b5b59a" opacity="0.7" />
+          <ellipse cx="30" cy="26" rx="6" ry="9" fill="#c9b8b0" opacity="0.85" />
+          <ellipse cx="30" cy="26" rx="3" ry="6" fill="#b89e94" opacity="0.7" />
+          <path d="M30 17 Q 28 22 30 27" stroke="#9d847a" stroke-width="0.5" fill="none" />
+        </svg>
+      </div>
+      <div class="away-day">Friday</div>
+      <div class="away-num">1</div>
+      <div class="away-month">May</div>
+    </div>
+
+    <!-- May 2 -->
+    <div class="away-card" aria-label="May 2, unavailable, in Goa">
+      <div class="bud-wrap" aria-hidden="true">
+        <svg viewBox="0 0 60 60">
+          <path d="M30 32 Q 28 44 30 56" stroke="#a89889" stroke-width="1.2" fill="none" stroke-linecap="round" />
+          <path d="M30 40 Q 24 38 21 42 Q 25 45 30 43 Z" fill="#b5b59a" opacity="0.7" />
+          <ellipse cx="30" cy="26" rx="6" ry="9" fill="#c9b8b0" opacity="0.85" />
+          <ellipse cx="30" cy="26" rx="3" ry="6" fill="#b89e94" opacity="0.7" />
+          <path d="M30 17 Q 32 22 30 27" stroke="#9d847a" stroke-width="0.5" fill="none" />
+        </svg>
+      </div>
+      <div class="away-day">Saturday</div>
+      <div class="away-num">2</div>
+      <div class="away-month">May</div>
+    </div>
+
+    <!-- May 3 -->
+    <div class="away-card" aria-label="May 3, unavailable, in Goa">
+      <div class="bud-wrap" aria-hidden="true">
+        <svg viewBox="0 0 60 60">
+          <path d="M30 32 Q 32 44 30 56" stroke="#a89889" stroke-width="1.2" fill="none" stroke-linecap="round" />
+          <path d="M30 42 Q 36 40 39 44 Q 35 47 30 45 Z" fill="#b5b59a" opacity="0.7" />
+          <ellipse cx="30" cy="26" rx="6" ry="9" fill="#c9b8b0" opacity="0.85" />
+          <ellipse cx="30" cy="26" rx="3" ry="6" fill="#b89e94" opacity="0.7" />
+          <path d="M30 17 Q 28 22 30 27" stroke="#9d847a" stroke-width="0.5" fill="none" />
+        </svg>
+      </div>
+      <div class="away-day">Sunday</div>
+      <div class="away-num">3</div>
+      <div class="away-month">May</div>
+    </div>
+  </div>
+
+  <p class="goa-note">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M7 1 L 8.5 5 L 13 5.5 L 9.5 8.5 L 10.5 13 L 7 10.5 L 3.5 13 L 4.5 8.5 L 1 5.5 L 5.5 5 Z" fill="none" stroke="currentColor" stroke-width="0.8" stroke-linejoin="round"/>
+    </svg>
+    unavailable — in Goa
+  </p>
+
+  <footer>
+    <span class="hour">7:00 pm</span> &nbsp;·&nbsp; <a href="https://maps.app.goo.gl/SYLxBsgiC84i861c6" target="_blank" rel="noopener">Concu, Indiranagar</a>
+    <svg class="sprig" viewBox="0 0 60 20" fill="none">
+      <path d="M2 10 Q 30 4 58 10" stroke="#a89889" stroke-width="0.8" stroke-linecap="round" />
+      <ellipse cx="14" cy="8" rx="3" ry="1.5" fill="#a89889" transform="rotate(-20 14 8)" />
+      <ellipse cx="30" cy="6" rx="3" ry="1.5" fill="#a89889" />
+      <ellipse cx="46" cy="8" rx="3" ry="1.5" fill="#a89889" transform="rotate(20 46 8)" />
+    </svg>
+  </footer>
+</main>
+<script>
+  (function () {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const palette = {
+      peach: {
+        wash: '#f0bca8',
+        petal: 'linear-gradient(135deg, #e8a890 0%, #f4cdc0 60%, #f8d8cc 100%)'
+      },
+      lavender: {
+        wash: '#bea8d1',
+        petal: 'linear-gradient(135deg, #a48cb8 0%, #c8b5dd 60%, #ddcae9 100%)'
+      }
+    };
+
+    function spawnTransition(card, done) {
+      const flower = card.querySelector('.flower-wrap');
+      const rect = flower.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+
+      const colors = palette[card.dataset.petal] || palette.peach;
+
+      const overlay = document.createElement('div');
+      overlay.className = 'petal-overlay';
+
+      const wash = document.createElement('div');
+      wash.className = 'wash';
+      wash.style.left = cx + 'px';
+      wash.style.top = cy + 'px';
+      wash.style.background = colors.wash;
+      overlay.appendChild(wash);
+
+      const NUM = 80;
+      const maxDim = Math.max(window.innerWidth, window.innerHeight);
+
+      for (let i = 0; i < NUM; i++) {
+        const petal = document.createElement('div');
+        petal.className = 'petal';
+        petal.style.left = cx + 'px';
+        petal.style.top = cy + 'px';
+        petal.style.background = colors.petal;
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 180 + Math.random() * maxDim * 0.9;
+        petal.style.setProperty('--tx', (Math.cos(angle) * distance).toFixed(1) + 'px');
+        petal.style.setProperty('--ty', (Math.sin(angle) * distance).toFixed(1) + 'px');
+        petal.style.setProperty('--start-r', (Math.random() * 360).toFixed(1) + 'deg');
+        petal.style.setProperty('--end-r', (Math.random() * 720 - 360).toFixed(1) + 'deg');
+        petal.style.animationDelay = Math.floor(Math.random() * 220) + 'ms';
+
+        const scale = 0.7 + Math.random() * 0.9;
+        petal.style.width = (22 * scale).toFixed(0) + 'px';
+        petal.style.height = (32 * scale).toFixed(0) + 'px';
+
+        overlay.appendChild(petal);
+      }
+
+      document.body.appendChild(overlay);
+      setTimeout(done, 1100);
+    }
+
+    document.querySelectorAll('.date-card').forEach(function (card) {
+      card.addEventListener('click', function (e) {
+        e.preventDefault();
+        const url = card.getAttribute('href');
+        if (reducedMotion) {
+          window.location.href = url;
+          return;
+        }
+        spawnTransition(card, function () {
+          window.location.href = url;
+        });
+      });
+    });
+  })();
+</script>
+</body>
+</html>
